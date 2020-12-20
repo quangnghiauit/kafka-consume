@@ -1,6 +1,6 @@
-package com.dacn.kafkadatalake.service;
+package com.dacn.kafkadatalake.dto.request;
 
-public class OrderRequest {
+public class OrderConsumerDTO {
     private int cusID;
     private int rulID;
     private int status;
@@ -9,29 +9,9 @@ public class OrderRequest {
     private String createdDate;
     private String receiverName;
     private String receiverPhone;
-    private String wardIdReceiver;
-    private String districtIdReceiver;
-    private String provinceIdReceiver;
-    private String locDescriptionReceiver;
+    private int receiveLocation;
     private String typeProduct;
     private String description;
-
-    public OrderRequest() {
-        this.cusID = 2;
-        this.rulID = 1;
-        this.status = 1;
-        this.totalAmount = 756456545;
-        this.volumeProduction = 1;
-        this.createdDate = "2020-12-09 00:00:00";
-        this.receiverName = "Nghia";
-        this.receiverPhone = "097876765767";
-        this.wardIdReceiver = "4";
-        this.districtIdReceiver = "5";
-        this.provinceIdReceiver = "6";
-        this.locDescriptionReceiver = "184 Lê Đại Hành";
-        this.typeProduct = "AirPods Pro";
-        this.description = "Tai nghe AirPods Pro sạc không dây Apple MWP22";
-    }
 
     public int getCusID() {
         return cusID;
@@ -89,36 +69,12 @@ public class OrderRequest {
         this.receiverPhone = receiverPhone;
     }
 
-    public String getWardIdReceiver() {
-        return wardIdReceiver;
+    public int getReceiveLocation() {
+        return receiveLocation;
     }
 
-    public void setWardIdReceiver(String wardIdReceiver) {
-        this.wardIdReceiver = wardIdReceiver;
-    }
-
-    public String getDistrictIdReceiver() {
-        return districtIdReceiver;
-    }
-
-    public void setDistrictIdReceiver(String districtIdReceiver) {
-        this.districtIdReceiver = districtIdReceiver;
-    }
-
-    public String getProvinceIdReceiver() {
-        return provinceIdReceiver;
-    }
-
-    public void setProvinceIdReceiver(String provinceIdReceiver) {
-        this.provinceIdReceiver = provinceIdReceiver;
-    }
-
-    public String getLocDescriptionReceiver() {
-        return locDescriptionReceiver;
-    }
-
-    public void setLocDescriptionReceiver(String locDescriptionReceiver) {
-        this.locDescriptionReceiver = locDescriptionReceiver;
+    public void setReceiveLocation(int receiveLocation) {
+        this.receiveLocation = receiveLocation;
     }
 
     public String getTypeProduct() {
