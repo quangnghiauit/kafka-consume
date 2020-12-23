@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="logfile">
+        <!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+        <File>${logdir}/system.log</File>
+        <encoder>
+            <pattern>%d %p [%c] - %m{50}%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>${logdir}/system.log.%i</FileNamePattern>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>100MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="actionLogFile">
+        <File>${logdir}/DataLakeServiceActionLog.log</File>
+        <encoder>
+            <pattern>%d %p [%c] - %m{50}%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>${logdir}/${logfilename}.%i</FileNamePattern>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>100MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="stdout">
+        <encoder>
+            <pattern>%d %p [%c] - &lt;%m&gt;%n</pattern>
+        </encoder>
+    </appender>
+    <logger additivity="false" level="DEBUG" name="actionLog">
+        <appender-ref ref="actionLogFile"/>
+    </logger>
+    <property name="logdir" value="./log"/>
+    <property name="logfilename" value="system.log"/>
+    <root level="INFO">
+        <appender-ref ref="logfile"/>
+        <appender-ref ref="stdout"/>
+    </root>
+</configuration>

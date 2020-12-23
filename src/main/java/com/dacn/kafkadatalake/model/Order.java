@@ -6,7 +6,7 @@ import com.dacn.kafkadatalake.dto.request.OrderConsumerDTO;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "datalakeorders")
 public class Order {
 
     @Id
