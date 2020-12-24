@@ -113,7 +113,7 @@ public class TransManagementServiceImpl implements TransManagementService {
                     "ReceiveName", "ReceivePhone", "ReceiveLocation", "VolumeProduction",
                     "TypeProduct", "Description"};
 
-            String currentDateTimeFormat = DateTimeUtils.getCurrentDateTime();
+            String currentDateTimeFormat = DateTimeUtils.getPreviousDateString();
             String fileName = "orderLog" + currentDateTimeFormat;
             String outputFile = "./storage/" + fileName + ".csv";
 

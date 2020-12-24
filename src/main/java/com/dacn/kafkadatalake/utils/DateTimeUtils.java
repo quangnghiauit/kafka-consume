@@ -63,6 +63,16 @@ public class DateTimeUtils {
     return dateFormat.format(date);
   }
 
+  public static String getPreviousDateString() {
+    DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT_YYYYMMDD);
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_YEAR, -1);
+//    Date date = new Date();
+    Date date = calendar.getTime();
+    dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+    return dateFormat.format(date);
+  }
+
   public static String getCurrentDateTime(String format) {
     DateFormat dateFormat = new SimpleDateFormat(format);
     Date date = new Date();
