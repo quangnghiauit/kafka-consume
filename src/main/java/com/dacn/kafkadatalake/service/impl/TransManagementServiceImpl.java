@@ -4,6 +4,7 @@ import com.dacn.kafkadatalake.dto.request.OrderConsumerDTO;
 import com.dacn.kafkadatalake.dto.response.BaseResponseDTO;
 import com.dacn.kafkadatalake.model.Order;
 import com.dacn.kafkadatalake.repository.OrderRepository;
+import com.dacn.kafkadatalake.service.AmazonS3ClientService;
 import com.dacn.kafkadatalake.service.TransManagementService;
 import com.dacn.kafkadatalake.utils.DateTimeUtils;
 import com.dacn.kafkadatalake.utils.GsonUtils;
@@ -19,12 +20,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
@@ -37,11 +40,14 @@ public class TransManagementServiceImpl implements TransManagementService {
     private static Logger LOGGER = LoggerFactory.getLogger(TransManagementServiceImpl.class);
 
     private final OrderRepository orderRepository;
+    private final AmazonS3ClientService amazonS3ClientService;
 
     @Autowired
-    public TransManagementServiceImpl(OrderRepository orderRepository) {
+    public TransManagementServiceImpl(OrderRepository orderRepository,
+                                      AmazonS3ClientService amazonS3ClientService) {
 
         this.orderRepository = orderRepository;
+        this.amazonS3ClientService = amazonS3ClientService;
     }
 
 
@@ -138,10 +144,33 @@ public class TransManagementServiceImpl implements TransManagementService {
 
                 createOrder(order);
             }
+
+            uploadFile(fileName + ".csv", outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Async
+    boolean uploadFile(String fileName, String pathName) {
+        try {
+            Path path = Paths.get(pathName);
+            String contentType = "text/plain";
+            byte[] content = null;
+            try {
+                content = Files.readAllBytes(path);
+            } catch (final IOException e) {
+            }
+            MultipartFile multipartFile = new MockMultipartFile(fileName,
+                    fileName, contentType, content);
+
+            amazonS3ClientService.uploadFileToS3Bucket(multipartFile, true);
+            LOGGER.info("upload file successful with fileName: {}, path: {}", fileName, pathName);
+        } catch (Exception ex) {
+           LOGGER.info("upload file exception with fileName: {}, path: {}, ex: {}", fileName, pathName, ex);
+        }
+        return false;
     }
 
 //    @Bean
