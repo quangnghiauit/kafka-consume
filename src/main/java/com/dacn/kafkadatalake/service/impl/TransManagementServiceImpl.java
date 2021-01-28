@@ -30,6 +30,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.dacn.kafkadatalake.enumeration.ReturnCodeEnum.SUCCESSFUL;
 
@@ -84,9 +86,10 @@ public class TransManagementServiceImpl implements TransManagementService {
 
     private Boolean writeLogToCSV(OrderConsumerDTO request) {
         try {
-            String[] headers = { "RulID", "CusID", "CreatedDate", "Status", "TotalAmount",
+            String[] headers = { "CusID", "CreatedDate", "Status", "TotalAmount",
                     "ReceiveName", "ReceivePhone", "ReceiveLocation", "VolumeProduction",
-                    "TypeProduct", "Description"};
+                    "TypeProduct", "Description", "SenderName", "SenderPhone", "SenderLocation",
+                    "ExpectedDate", "RecieveDate", "RecieveAddress", "SenderAddress"};
 
             String currentDateTimeFormat = DateTimeUtils.getCurrentDateTime();
             String fileName = "orderLog" + currentDateTimeFormat;
@@ -97,10 +100,12 @@ public class TransManagementServiceImpl implements TransManagementService {
                     StandardOpenOption.CREATE);
             try (CSVPrinter printer = CSVFormat.DEFAULT.withHeader(headers).withSkipHeaderRecord(true)
                     .print(writer)) {
-                printer.printRecord(request.getRulID(), request.getCusID(), request.getCreatedDate(),
+                printer.printRecord(request.getCusID(), request.getCreatedDate(),
                         request.getStatus(), request.getTotalAmount(), request.getReceiverName(),
                         request.getReceiverPhone(), request.getReceiveLocation(), request.getVolumeProduction(),
-                        request.getTypeProduct(), request.getDescription());
+                        request.getTypeProduct(), request.getDescription(), request.getSenderName(), request.getSenderPhone(),
+                        request.getSenderLocation(), request.getExpectedDate(), request.getRecieveDate(),
+                        request.getRecieveAddress(), request.getSenderAddress());
 
                 printer.flush();
 
@@ -114,12 +119,15 @@ public class TransManagementServiceImpl implements TransManagementService {
 
     @Override
     public BaseResponseDTO orderReaderFile() {
+        BaseResponseDTO baseResponseDTO = new BaseResponseDTO();
+        List<OrderConsumerDTO> response = new ArrayList<>();
         try {
-            String[] headers = { "RulID", "CusID", "CreatedDate", "Status", "TotalAmount",
+            String[] headers = { "CusID", "CreatedDate", "Status", "TotalAmount",
                     "ReceiveName", "ReceivePhone", "ReceiveLocation", "VolumeProduction",
-                    "TypeProduct", "Description"};
+                    "TypeProduct", "Description", "SenderName", "SenderPhone", "SenderLocation",
+                    "ExpectedDate", "RecieveDate", "RecieveAddress", "SenderAddress"};
 
-            String currentDateTimeFormat = DateTimeUtils.getPreviousDateString();
+            String currentDateTimeFormat = DateTimeUtils.getCurrentDateTime();
             String fileName = "orderLog" + currentDateTimeFormat;
             String outputFile = "./storage/" + fileName + ".csv";
 
@@ -130,26 +138,34 @@ public class TransManagementServiceImpl implements TransManagementService {
 
             for (CSVRecord csvRecord : csvParser) {
                 OrderConsumerDTO order = new OrderConsumerDTO();
-                order.setRulID(Integer.parseInt(csvRecord.get("RulID")));
                 order.setCusID(Integer.parseInt(csvRecord.get("CusID")));
                 order.setCreatedDate(csvRecord.get("CreatedDate"));
                 order.setStatus(Integer.parseInt(csvRecord.get("Status")));
                 order.setTotalAmount(Float.parseFloat(csvRecord.get("TotalAmount")));
                 order.setReceiverName(csvRecord.get("ReceiveName"));
-                order.setReceiverPhone(csvRecord.get("ReceivePhone"));
+                order.setReceiverPhone(Integer.parseInt(csvRecord.get("ReceivePhone")));
                 order.setReceiveLocation(Integer.parseInt(csvRecord.get("ReceiveLocation")));
                 order.setVolumeProduction(Float.parseFloat(csvRecord.get("VolumeProduction")));
                 order.setTypeProduct(csvRecord.get("TypeProduct"));
                 order.setDescription(csvRecord.get("Description"));
-
+                order.setDescription(csvRecord.get("SenderName"));
+                order.setDescription(csvRecord.get("SenderPhone"));
+                order.setDescription(csvRecord.get("SenderLocation"));
+                order.setDescription(csvRecord.get("ExpectedDate"));
+                order.setDescription(csvRecord.get("RecieveDate"));
+                order.setDescription(csvRecord.get("RecieveAddress"));
+                order.setDescription(csvRecord.get("SenderAddress"));
+                response.add(order);
                 createOrder(order);
             }
 
             uploadFile(fileName + ".csv", outputFile);
+            baseResponseDTO.success("Upload file to AWS S3 successful.", response);
         } catch (IOException e) {
             e.printStackTrace();
+            baseResponseDTO.fail(e.getMessage());
         }
-        return null;
+        return baseResponseDTO;
     }
 
     @Async

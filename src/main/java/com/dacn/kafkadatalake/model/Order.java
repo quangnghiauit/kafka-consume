@@ -14,8 +14,8 @@ public class Order {
     @Column(name ="ID")
     private int id;
 
-    @Column(name ="RulID")
-    private int rulID;
+//    @Column(name ="RulID")
+//    private int rulID;
 
     @Column(name ="CusID")
     private int cusID;
@@ -29,13 +29,13 @@ public class Order {
     @Column(name ="TotalAmount")
     private float totalAmount;
 
-    @Column(name ="ReceiveName")
-    private String receiveName;
+    @Column(name ="ReceiverName")
+    private String receiverName;
 
-    @Column(name ="ReceivePhone")
-    private int receivePhone;
+    @Column(name ="ReceiverPhone")
+    private int receiverPhone;
 
-    @Column(name ="ReceiveLocation")
+    @Column(name ="ReceiverLocation")
     private int receiveLocation;
 
     @Column(name ="VolumeProduction")
@@ -47,6 +47,27 @@ public class Order {
     @Column(name ="Description")
     private String description;
 
+    @Column(name ="SenderName")
+    private String senderName;
+
+    @Column(name ="SenderPhone")
+    private long senderPhone;
+
+    @Column(name ="SenderLocation")
+    private int senderLocation;
+
+    @Column(name ="ExpectedDate")
+    private String expectedDate;
+
+    @Column(name ="RecieveDate")
+    private String recieveDate;
+
+    @Column(name ="RecieveAddress")
+    private String recieveAddress;
+
+    @Column(name ="SenderAddress")
+    private String senderAddress;
+
     public Order() {
     }
 
@@ -56,14 +77,6 @@ public class Order {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getRulID() {
-        return rulID;
-    }
-
-    public void setRulID(int rulID) {
-        this.rulID = rulID;
     }
 
     public int getCusID() {
@@ -98,20 +111,28 @@ public class Order {
         this.totalAmount = totalAmount;
     }
 
-    public String getReceiveName() {
-        return receiveName;
+    public String getReceiverName() {
+        return receiverName;
     }
 
-    public void setReceiveName(String receiveName) {
-        this.receiveName = receiveName;
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
     }
 
-    public int getReceivePhone() {
-        return receivePhone;
+    public int getReceiverPhone() {
+        return receiverPhone;
     }
 
-    public void setReceivePhone(int receivePhone) {
-        this.receivePhone = receivePhone;
+    public void setReceiverPhone(int receiverPhone) {
+        this.receiverPhone = receiverPhone;
+    }
+
+    public int getReceiveLocation() {
+        return receiveLocation;
+    }
+
+    public void setReceiveLocation(int receiveLocation) {
+        this.receiveLocation = receiveLocation;
     }
 
     public float getVolumeProduction() {
@@ -138,25 +159,79 @@ public class Order {
         this.description = description;
     }
 
-    public int getReceiveLocation() {
-        return receiveLocation;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setReceiveLocation(int receiveLocation) {
-        this.receiveLocation = receiveLocation;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public long getSenderPhone() {
+        return senderPhone;
+    }
+
+    public void setSenderPhone(long senderPhone) {
+        this.senderPhone = senderPhone;
+    }
+
+    public int getSenderLocation() {
+        return senderLocation;
+    }
+
+    public void setSenderLocation(int senderLocation) {
+        this.senderLocation = senderLocation;
+    }
+
+    public String getExpectedDate() {
+        return expectedDate;
+    }
+
+    public void setExpectedDate(String expectedDate) {
+        this.expectedDate = expectedDate;
+    }
+
+    public String getRecieveDate() {
+        return recieveDate;
+    }
+
+    public void setRecieveDate(String recieveDate) {
+        this.recieveDate = recieveDate;
+    }
+
+    public String getRecieveAddress() {
+        return recieveAddress;
+    }
+
+    public void setRecieveAddress(String recieveAddress) {
+        this.recieveAddress = recieveAddress;
+    }
+
+    public String getSenderAddress() {
+        return senderAddress;
+    }
+
+    public void setSenderAddress(String senderAddress) {
+        this.senderAddress = senderAddress;
     }
 
     public void doMappingEntity(OrderConsumerDTO request) {
-        this.rulID = request.getRulID();
         this.cusID = request.getCusID();
+        this.createdDate = request.getCreatedDate();
         this.status = request.getStatus();
         this.totalAmount = request.getTotalAmount();
-        this.receiveName = request.getReceiverName();
-        this.receivePhone = Integer.parseInt(request.getReceiverPhone());
+        this.receiverName = request.getReceiverName();
+        this.receiverPhone = request.getReceiverPhone();
         this.receiveLocation = request.getReceiveLocation();
         this.volumeProduction = request.getVolumeProduction();
         this.typeProduct = request.getTypeProduct();
         this.description = request.getDescription();
-        this.createdDate = request.getCreatedDate();
+        this.senderName = request.getSenderName();
+        this.senderPhone = request.getSenderPhone();
+        this.senderLocation = request.getSenderLocation();
+        this.expectedDate = request.getExpectedDate();
+        this.recieveDate = request.getRecieveDate();
+        this.recieveAddress = request.getRecieveAddress();
+        this.senderAddress = request.getSenderAddress();
     }
 }
